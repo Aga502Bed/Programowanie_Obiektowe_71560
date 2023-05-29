@@ -112,18 +112,36 @@ public class Main {   //main - punkt wejścia programu, rozpoczyna się wykonywa
         scanner.close();
     }
 
-    //if else if jest użyte w celu określenia kategorii BMI na podstawie podanych przez programiste progów
+    //switch użyte w celu określenia kategorii BMI na podstawie podanych przez programiste progów
     public static String getCategory(double bmi) {
-        if (bmi <= 16.9) {   //jeśli BMI jest mniejsze lub równe to wypisz...
-            return "Wychudzenie - zalecany lekarz :(";
-        } else if (bmi <= 18.5) {   //jeśli nie to jeśli BMI jest w przedziale takim i takim to wypisz...
-            return "Niedowaga ;(";
-        } else if (bmi <= 24.9) {
-            return "Waga w normie :D";
-        } else if (bmi <= 29.9) {
-            return "Nadwaga :/";
-        } else {   //jeśli żadne z powyższych to BMI jest większe lub równe to wypisz...
-            return "Otyłość - zalecany lekarz :(";
-        }
+    int category = 0;
+    
+    if (bmi <= 16.9) {   //jeśli BMI jest mniejsze/wieksze lub równe to daj kategorie...
+        category = 1;
+    } else if (bmi <= 18.5) {
+        category = 2;
+    } else if (bmi <= 24.9) {
+        category = 3;
+    } else if (bmi <= 29.9) {
+        category = 4;
+    } else {
+        category = 5;
     }
+    
+    switch (category) {   //jeśli BMI jest kategorii to wypisz...
+        case 1:
+            return "Wychudzenie - zalecany lekarz :(";
+        case 2:
+            return "Niedowaga ;(";
+        case 3:
+            return "Waga w normie :D";
+        case 4:
+            return "Nadwaga :/";
+        case 5:
+            return "Otyłość - zalecany lekarz :(";
+        default:
+            return "Nieznana kategoria";
+    }
+}
+
 }
