@@ -1,0 +1,129 @@
+//Programowanie Obiektowe - projekt, zaliczenie
+//Agata Bednarska 71560 INLS2
+
+import java.util.Scanner;
+//java.until to pakiet, który zawiera narzędzia, takie jak Scanner
+//Dlatego używamy java.until.Scanner - a scanner to nic innego jak możliwość odczytywania danych
+//z różnych źródeł, takich jak klawiatura
+//Więc umożliwia to wprowadzanie danych przez użytkownika programu poprzez klawiaturę
+
+abstract class Person {   //klasa abstrakcyjna "Person" - służy do tworzenia obiektów
+                          //Definiujue wspólne własności, które mogą być dziedziczone i wykorzystywane orzez podklasy
+    private String name;   //string - tekst pisany z klawaitury a, b, c, ...
+    private int age;   //int - liczby całkowite
+    private char gender;   //char - pojedynczy znak z klawiatury a, b, c, ...
+
+    public Person(String name, int age, char gender) {
+        this.name = name;
+        this.age = age;
+        this.gender = gender;
+    }
+    public abstract double calculateBMI(double weight, double height);
+                //do obliczenia BMI potrzebujemy wagi i wzrostu
+
+    public String getName() {
+        return name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public char getGender() {
+        return gender;
+    }  //public - pobierają zawartości zmiennych i pozwalają na dostęp do obiektów z Person
+}
+
+interface BMICalculator {   //BMI = masa / kg^2
+    double calculateBMI(double weight, double height);
+}
+
+// kalkulator BMI dla mężczyzn
+class Male extends Person implements BMICalculator {
+    public Male(String name, int age) {
+        super(name, age, 'M');
+    }
+
+    @Override   //override - metoda w podklasie ma zastąpić metodę nadklasy lub zasotosować metodę z interfejsu
+    public double calculateBMI(double weight, double height) {
+        double heightInMeters = height / 100.0;
+        return weight / (heightInMeters * heightInMeters);
+    }
+}
+
+// kalkulator BMI dla kobiet
+class Female extends Person implements BMICalculator {
+    public Female(String name, int age) {
+        super(name, age, 'K');
+    }
+
+    @Override
+    public double calculateBMI(double weight, double height) {
+        double heightInMeters = height / 100.0;
+        return weight / (heightInMeters * heightInMeters);
+    }
+}
+
+public class Main {   //main - punkt wejścia programu, rozpoczyna się wykonywanie programu
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Podaj imię: ");
+        String name = scanner.nextLine();
+
+        System.out.print("Podaj wiek: ");
+        int age = scanner.nextInt();
+
+        System.out.print("Podaj płeć (M - mężczyzna / K - kobieta): ");
+        char gender = scanner.next().charAt(0);
+
+                //użytkownik podaje swoje dane, które odczytuje komputer i je zapamiętuje
+
+        Person person;   //na podstawie danych wprowadzonych przez użytkownika,
+                         //jesli uzytkownik wpisze M - program tworzy obiekt Mężczyzna, Male
+                         //jeśli użytkownik wpisze K - program tworzy obiekt Kobieta, Female
+                         //jeśli użytkownik wpisze inną literę - program wypisuje błąd
+        if (gender == 'M') {
+            person = new Male(name, age);
+        } else if (gender == 'K') {
+            person = new Female(name, age);
+        } else {
+            System.out.println("Błąd. Wpisz M lub K.");
+            return;
+        }
+
+        System.out.print("Waga (kg): ");
+        double weight = scanner.nextDouble();
+
+        System.out.print("Wzrost (cm): ");
+        double height = scanner.nextDouble();
+
+        double bmi = person.calculateBMI(weight, height);
+        String category = getCategory(bmi);   //getCategory - określanie kategorii BMI na podstawie obliczeń
+
+        //program wyświetla informacje o użytkowniku, które podał wcześniej plus wyświetla wynik obliczeń
+        System.out.println(" ");
+        System.out.println("Imię: " + person.getName());
+        System.out.println("Wiek: " + person.getAge());
+        System.out.println("Płeć: " + person.getGender());
+        System.out.println("BMI: " + bmi);
+        System.out.println("Wynik: " + category);
+
+        scanner.close();
+    }
+
+    //if else if jest użyte w celu określenia kategorii BMI na podstawie podanych przez programiste progów
+    public static String getCategory(double bmi) {
+        if (bmi <= 16.9) {   //jeśli BMI jest mniejsze lub równe to wypisz...
+            return "Wychudzenie - zalecany lekarz :(";
+        } else if (bmi <= 18.5) {   //jeśli nie to jeśli BMI jest w przedziale takim i takim to wypisz...
+            return "Niedowaga ;(";
+        } else if (bmi <= 24.9) {
+            return "Waga w normie :D";
+        } else if (bmi <= 29.9) {
+            return "Nadwaga :/";
+        } else {   //jeśli żadne z powyższych to BMI jest większe lub równe to wypisz...
+            return "Otyłość - zalecany lekarz :(";
+        }
+    }
+}
